@@ -521,8 +521,9 @@
 </div>
 
 <script>
-const TSV_URL = 'words.tsv';
-const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg/export?format=tsv&gid=734089437';
+const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
+const GID = '734089437';
+const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v2';
 
 let allWords = [];
@@ -538,31 +539,35 @@ let wrongWords = [];
 let currentMode = 'study'; 
 let hardWords = new Set(); 
 
-// TSV 파일에서 단어 데이터를 불러옴
-window.onload = async () => {
-  try {
-    const res = await fetch(TSV_URL);
-    if (!res.ok) throw new Error('Failed to fetch TSV');
-    const text = await res.text();
-    parseTSV(text);
-  } catch (err) {
-    console.error(err);
+// JSONP 방식으로 구글 시트에서 데이터를 불러옴 (CORS 우회)
+function loadSheet(callback) {
+  const cbName = 'sheetCb_' + Date.now();
+  window[cbName] = function(response) {
+    delete window[cbName];
+    callback(response);
+  };
+  const script = document.createElement('script');
+  script.src = JSONP_URL + '&callback=' + cbName;
+  script.onerror = () => {
+    delete window[cbName];
     showLoadError();
-  }
-};
+  };
+  document.body.appendChild(script);
+}
 
-function parseTSV(text) {
-  const lines = text.trim().split('\n');
+function parseSheetResponse(response) {
+  const rows = response.table.rows;
   const data = [];
 
-  // 첫 번째 줄은 헤더이므로 건너뜀
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split('\t');
-    if (!cols[0]) continue;
+  rows.forEach(row => {
+    const c = row.c;
+    if (!c || !c[0]) return;
 
-    let dayVal = cols[0].trim();
-    let kanji = (cols[1] || '').trim();
-    let hira = (cols[2] || '').trim();
+    let dayVal = c[0].v !== null ? String(c[0].v) : '';
+    if (dayVal === 'Day' || dayVal === 'DAY' || dayVal === '') return;
+
+    let kanji = c[1] && c[1].v !== null ? String(c[1].v) : '';
+    let hira = c[2] && c[2].v !== null ? String(c[2].v) : '';
 
     if (kanji === '-' || kanji === '') {
       kanji = hira;
@@ -578,12 +583,16 @@ function parseTSV(text) {
       day: dayVal,
       kanji: kanji,
       hira: hira,
-      mean: (cols[3] || '').trim(),
-      ex: (cols[4] || '').trim(),
-      exKr: (cols[5] || '').trim()
+      mean: c[3] && c[3].v !== null ? String(c[3].v) : '',
+      ex: c[4] && c[4].v !== null ? String(c[4].v) : '',
+      exKr: c[5] && c[5].v !== null ? String(c[5].v) : ''
     });
-  }
+  });
 
+  return data;
+}
+
+function applyWords(data) {
   allWords = data;
 
   if (allWords.length === 0) {
@@ -598,8 +607,20 @@ function parseTSV(text) {
   document.getElementById('dayTabs').style.display = '';
   document.getElementById('syncBtn').style.display = '';
 
-  setMode('study');
+  setMode(currentMode);
 }
+
+window.onload = () => {
+  loadSheet(response => {
+    try {
+      const data = parseSheetResponse(response);
+      applyWords(data);
+    } catch (err) {
+      console.error(err);
+      showLoadError();
+    }
+  });
+};
 
 function showLoadError(msg = "인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.") {
   document.getElementById('loading').innerHTML = `
@@ -857,33 +878,34 @@ document.addEventListener('keydown', e => {
   if (e.code === 'ArrowLeft' && revealed) markAnswer(false);
 });
 
-async function syncFromSheet() {
+function syncFromSheet() {
   const btn = document.getElementById('syncBtn');
   btn.classList.add('syncing');
   btn.classList.remove('done', 'fail');
   btn.textContent = '↻ 동기화 중...';
 
-  try {
-    const res = await fetch(SHEET_TSV_URL);
-    if (!res.ok) throw new Error('Fetch failed');
-    const text = await res.text();
-    const prevCount = allWords.length;
-    parseTSV(text);
-    const diff = allWords.length - prevCount;
-    btn.classList.remove('syncing');
-    btn.classList.add('done');
-    btn.textContent = diff > 0 ? `✓ +${diff}개 동기화 완료` : '✓ 최신 상태';
-  } catch (err) {
-    console.error(err);
-    btn.classList.remove('syncing');
-    btn.classList.add('fail');
-    btn.textContent = '✗ 동기화 실패';
-  }
+  const prevCount = allWords.length;
 
-  setTimeout(() => {
-    btn.classList.remove('done', 'fail');
-    btn.textContent = '↻ 동기화';
-  }, 3000);
+  loadSheet(response => {
+    try {
+      const data = parseSheetResponse(response);
+      applyWords(data);
+      const diff = allWords.length - prevCount;
+      btn.classList.remove('syncing');
+      btn.classList.add('done');
+      btn.textContent = diff > 0 ? `✓ +${diff}개 동기화 완료` : '✓ 최신 상태';
+    } catch (err) {
+      console.error(err);
+      btn.classList.remove('syncing');
+      btn.classList.add('fail');
+      btn.textContent = '✗ 동기화 실패';
+    }
+
+    setTimeout(() => {
+      btn.classList.remove('done', 'fail');
+      btn.textContent = '↻ 동기화';
+    }, 3000);
+  });
 }
 
 </script>
