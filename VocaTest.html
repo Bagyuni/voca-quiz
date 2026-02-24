@@ -425,7 +425,7 @@
 
 <div id="loading" class="container active" style="text-align:center; padding-top: 50px;">
   <h2 style="color: var(--text); margin-bottom: 10px;">데이터를 불러오는 중입니다...</h2>
-  <p style="color: var(--text-dim);">구글 시트에서 최신 단어장을 동기화하고 있습니다.</p>
+  <p style="color: var(--text-dim);">단어장을 불러오고 있습니다.</p>
 </div>
 
 <div id="studyContainer" class="container">
@@ -499,11 +499,7 @@
 </div>
 
 <script>
-// 보안 정책(CORS)을 100% 우회하는 JSONP 방식 사용
-const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
-const GID = '734089437';
-const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&callback=handleSheetData`;
-
+const TSV_URL = 'words.tsv';
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v2';
 
 let allWords = [];
@@ -519,73 +515,66 @@ let wrongWords = [];
 let currentMode = 'study'; 
 let hardWords = new Set(); 
 
-// 페이지가 열리면 시트에서 스크립트를 가져와 실행함
-window.onload = () => {
-  const script = document.createElement('script');
-  script.src = JSONP_URL;
-  
-  // 만약 스크립트 로드 자체가 실패했을 경우
-  script.onerror = () => {
-    showLoadError();
-  };
-  
-  document.body.appendChild(script);
-};
-
-// JSONP 콜백 함수 (구글 시트 데이터가 도착하면 자동 실행됨)
-function handleSheetData(response) {
+// TSV 파일에서 단어 데이터를 불러옴
+window.onload = async () => {
   try {
-    const rows = response.table.rows;
-    const data = [];
-    
-    rows.forEach(row => {
-      const c = row.c;
-      if (!c || !c[0]) return;
-      
-      let dayVal = c[0].v !== null ? String(c[0].v) : '';
-      if (dayVal === 'Day' || dayVal === 'DAY' || dayVal === '') return; // 헤더나 빈칸 무시
-      
-      let kanji = c[1] && c[1].v !== null ? String(c[1].v) : '';
-      let hira = c[2] && c[2].v !== null ? String(c[2].v) : '';
-      
-      if (kanji === '-' || kanji === '') {
-        kanji = hira;
-        hira = '';
-      } else if (hira === '-') {
-        hira = '';
-      }
-      
-      const uniqueId = `w_${kanji}_${hira}`;
-      
-      data.push({
-        id: uniqueId,
-        day: dayVal,
-        kanji: kanji,
-        hira: hira,
-        mean: c[3] && c[3].v !== null ? String(c[3].v) : '',
-        ex: c[4] && c[4].v !== null ? String(c[4].v) : '',
-        exKr: c[5] && c[5].v !== null ? String(c[5].v) : ''
-      });
-    });
-    
-    allWords = data;
-    
-    if(allWords.length === 0) {
-      showLoadError("데이터를 찾을 수 없습니다.");
-      return;
-    }
-
-    loadHardStatus();
-    extractDays();
-    
-    document.getElementById('modeSwitch').style.display = '';
-    document.getElementById('dayTabs').style.display = '';
-    
-    setMode('study'); 
+    const res = await fetch(TSV_URL);
+    if (!res.ok) throw new Error('Failed to fetch TSV');
+    const text = await res.text();
+    parseTSV(text);
   } catch (err) {
     console.error(err);
     showLoadError();
   }
+};
+
+function parseTSV(text) {
+  const lines = text.trim().split('\n');
+  const data = [];
+
+  // 첫 번째 줄은 헤더이므로 건너뜀
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split('\t');
+    if (!cols[0]) continue;
+
+    let dayVal = cols[0].trim();
+    let kanji = (cols[1] || '').trim();
+    let hira = (cols[2] || '').trim();
+
+    if (kanji === '-' || kanji === '') {
+      kanji = hira;
+      hira = '';
+    } else if (hira === '-') {
+      hira = '';
+    }
+
+    const uniqueId = `w_${kanji}_${hira}`;
+
+    data.push({
+      id: uniqueId,
+      day: dayVal,
+      kanji: kanji,
+      hira: hira,
+      mean: (cols[3] || '').trim(),
+      ex: (cols[4] || '').trim(),
+      exKr: (cols[5] || '').trim()
+    });
+  }
+
+  allWords = data;
+
+  if (allWords.length === 0) {
+    showLoadError("데이터를 찾을 수 없습니다.");
+    return;
+  }
+
+  loadHardStatus();
+  extractDays();
+
+  document.getElementById('modeSwitch').style.display = '';
+  document.getElementById('dayTabs').style.display = '';
+
+  setMode('study');
 }
 
 function showLoadError(msg = "인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.") {
