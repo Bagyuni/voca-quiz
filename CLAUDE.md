@@ -26,8 +26,7 @@ JLPT vocabulary study & quiz app — Bun + React + TypeScript.
 ### Data
 
 [[types.ts]] — `Word` interface.
-[[words.ts]] — TSV parser, Google Sheets JSONP fetcher.
-[[words.tsv]] — local vocabulary database (version controlled). Updated on sync (동기화).
+[[words.ts]] — Google Sheets JSONP fetcher, localStorage cache.
 
 ### Components
 

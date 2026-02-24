@@ -22,16 +22,6 @@ const server = Bun.serve({
       });
     }
 
-    if (url.pathname === '/words.tsv') {
-      if (req.method === 'PUT') {
-        await Bun.write('./words.tsv', await req.text());
-        return new Response('ok');
-      }
-      return new Response(Bun.file('./words.tsv'), {
-        headers: { 'Content-Type': 'text/tab-separated-values' },
-      });
-    }
-
     return new Response(Bun.file('./index.html'), {
       headers: { 'Content-Type': 'text/html' },
     });

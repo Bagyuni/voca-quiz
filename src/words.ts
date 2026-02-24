@@ -1,5 +1,7 @@
 import type { Word } from './types';
 
+const WORDS_CACHE_KEY = 'jp_vocab_words_cache';
+
 function normalizeWord(
   day: string,
   kanjiRaw: string,
@@ -19,25 +21,6 @@ function normalizeWord(
   }
 
   return { id: `w_${kanji}_${hira}`, day, kanji, hira, mean, ex, exKr };
-}
-
-export function parseTSV(text: string): Word[] {
-  const lines = text.trim().split('\n');
-  return lines
-    .slice(1)
-    .map((line) => {
-      const [day, kanji, hira, mean, ex, exKr] = line.split('\t');
-      if (!day || day === 'Day' || day === 'DAY') return null;
-      return normalizeWord(
-        day,
-        kanji || '',
-        hira || '',
-        mean || '',
-        ex || '',
-        exKr || '',
-      );
-    })
-    .filter((w): w is Word => w !== null);
 }
 
 interface GvizCell {
@@ -70,28 +53,19 @@ export function parseSheetResponse(response: GvizResponse): Word[] {
   return words;
 }
 
-const TSV_HEADER = 'Day\t한자\t히라가나\t뜻\t예문\t예문 해석';
-
-export function toTSV(words: Word[]): string {
-  const lines = words.map(
-    (w) =>
-      `${w.day}\t${w.kanji}\t${w.hira || '-'}\t${w.mean}\t${w.ex}\t${w.exKr}`,
-  );
-  return `${TSV_HEADER}\n${lines.join('\n')}\n`;
+export function loadCache(): Word[] | null {
+  try {
+    const data = localStorage.getItem(WORDS_CACHE_KEY);
+    if (!data) return null;
+    const words = JSON.parse(data) as Word[];
+    return words.length > 0 ? words : null;
+  } catch {
+    return null;
+  }
 }
 
-export async function loadTSV(): Promise<Word[]> {
-  const res = await fetch('words.tsv');
-  if (!res.ok) throw new Error('Failed to load words.tsv');
-  return parseTSV(await res.text());
-}
-
-export async function saveTSV(words: Word[]): Promise<void> {
-  await fetch('words.tsv', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'text/tab-separated-values' },
-    body: toTSV(words),
-  }).catch(() => {});
+export function saveCache(words: Word[]): void {
+  localStorage.setItem(WORDS_CACHE_KEY, JSON.stringify(words));
 }
 
 export function loadFromSheet(sheetId: string, gid: string): Promise<Word[]> {

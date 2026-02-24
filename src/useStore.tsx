@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 import type { Word } from './types';
-import { loadFromSheet, loadTSV, saveTSV } from './words';
+import { loadCache, loadFromSheet, saveCache } from './words';
 
 const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
@@ -70,19 +70,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [allWords, currentDay]);
 
   useEffect(() => {
-    loadTSV()
+    const cached = loadCache();
+    if (cached) {
+      setAllWords(cached);
+      setLoading(false);
+    }
+
+    setSyncing(true);
+    loadFromSheet(SHEET_ID, GID)
       .then((words) => {
-        if (words.length === 0) {
-          setError('데이터를 찾을 수 없습니다.');
-        } else {
-          setAllWords(words);
-        }
-        setLoading(false);
+        setAllWords(words);
+        saveCache(words);
+        if (!cached) setLoading(false);
       })
       .catch(() => {
-        setError('words.tsv를 불러올 수 없습니다.');
-        setLoading(false);
-      });
+        if (!cached) setError('인터넷 연결을 확인해주세요.');
+        if (!cached) setLoading(false);
+      })
+      .finally(() => setSyncing(false));
   }, []);
 
   const toggleHard = useCallback((id: string) => {
@@ -111,9 +116,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     loadFromSheet(SHEET_ID, GID)
       .then((words) => {
         setAllWords(words);
+        saveCache(words);
         setSyncDiff(words.length - prevCount);
         setSyncStatus('done');
-        saveTSV(words);
       })
       .catch(() => {
         setSyncStatus('fail');

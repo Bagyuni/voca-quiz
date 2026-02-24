@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "bun run dev.ts",
-    "build": "bun build src/index.tsx --outdir dist && cp index.html dist/ && cp src/App.css dist/app.css && cp words.tsv dist/",
+    "build": "bun build src/index.tsx --outdir dist && cp index.html dist/ && cp src/App.css dist/app.css",
     "test": "bun test",
     "lint": "biome check --write src/ && stylelint --fix src/**/*.css",
     "format": "biome format --write src/"
