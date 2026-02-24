@@ -409,12 +409,34 @@
 
   .keyboard-hint { margin-top: 16px; font-size: 0.75rem; color: var(--text-dim); opacity: 0.5; text-align: center; }
   .keyboard-hint kbd { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+
+  .title-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
+  .sync-btn {
+    padding: 6px 14px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-dim);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Noto Sans KR';
+    transition: all 0.2s;
+    display: none;
+  }
+  .sync-btn:hover { background: var(--card-hover); color: var(--text); }
+  .sync-btn.syncing { pointer-events: none; opacity: 0.5; }
+  .sync-btn.done { border-color: var(--correct); color: var(--correct); }
+  .sync-btn.fail { border-color: var(--wrong); color: var(--wrong); }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>JLPT <span>단어장</span></h1>
+  <div class="title-row">
+    <h1>JLPT <span>단어장</span></h1>
+    <button class="sync-btn" id="syncBtn" onclick="syncFromSheet()">↻ 동기화</button>
+  </div>
   <div class="mode-switch" id="modeSwitch" style="display:none;">
     <button class="mode-btn active" onclick="setMode('study')" id="btnStudy">📖 공부 모드</button>
     <button class="mode-btn" onclick="setMode('quiz')" id="btnQuiz">📝 퀴즈 모드</button>
@@ -500,6 +522,7 @@
 
 <script>
 const TSV_URL = 'words.tsv';
+const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg/export?format=tsv&gid=734089437';
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v2';
 
 let allWords = [];
@@ -573,6 +596,7 @@ function parseTSV(text) {
 
   document.getElementById('modeSwitch').style.display = '';
   document.getElementById('dayTabs').style.display = '';
+  document.getElementById('syncBtn').style.display = '';
 
   setMode('study');
 }
@@ -832,6 +856,35 @@ document.addEventListener('keydown', e => {
   if (e.code === 'ArrowRight' && revealed) markAnswer(true);
   if (e.code === 'ArrowLeft' && revealed) markAnswer(false);
 });
+
+async function syncFromSheet() {
+  const btn = document.getElementById('syncBtn');
+  btn.classList.add('syncing');
+  btn.classList.remove('done', 'fail');
+  btn.textContent = '↻ 동기화 중...';
+
+  try {
+    const res = await fetch(SHEET_TSV_URL);
+    if (!res.ok) throw new Error('Fetch failed');
+    const text = await res.text();
+    const prevCount = allWords.length;
+    parseTSV(text);
+    const diff = allWords.length - prevCount;
+    btn.classList.remove('syncing');
+    btn.classList.add('done');
+    btn.textContent = diff > 0 ? `✓ +${diff}개 동기화 완료` : '✓ 최신 상태';
+  } catch (err) {
+    console.error(err);
+    btn.classList.remove('syncing');
+    btn.classList.add('fail');
+    btn.textContent = '✗ 동기화 실패';
+  }
+
+  setTimeout(() => {
+    btn.classList.remove('done', 'fail');
+    btn.textContent = '↻ 동기화';
+  }, 3000);
+}
 
 </script>
 </body>
