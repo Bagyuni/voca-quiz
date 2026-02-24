@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "src/**/*.{ts,tsx}"
+      run: bunx biome check --no-errors-on-unmatched {staged_files}
+    stylelint:
+      glob: "src/**/*.css"
+      run: bunx stylelint {staged_files}
+    test:
+      run: bun test
