@@ -81,18 +81,17 @@ export function toTSV(words: Word[]): string {
 }
 
 export async function loadTSV(): Promise<Word[]> {
-  const res = await fetch('/words.tsv');
+  const res = await fetch('words.tsv');
   if (!res.ok) throw new Error('Failed to load words.tsv');
   return parseTSV(await res.text());
 }
 
 export async function saveTSV(words: Word[]): Promise<void> {
-  const res = await fetch('/words.tsv', {
+  await fetch('words.tsv', {
     method: 'PUT',
     headers: { 'Content-Type': 'text/tab-separated-values' },
     body: toTSV(words),
-  });
-  if (!res.ok) throw new Error('Failed to save words.tsv');
+  }).catch(() => {});
 }
 
 export function loadFromSheet(sheetId: string, gid: string): Promise<Word[]> {
