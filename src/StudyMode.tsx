@@ -13,7 +13,7 @@ export function StudyMode() {
     : words;
 
   return (
-    <div className="container">
+    <div className="container container-wide">
       <div className="filter-bar">
         <label className={cn('filter-toggle', hardFilterOn && 'active')}>
           <input

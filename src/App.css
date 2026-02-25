@@ -30,6 +30,13 @@ body {
   user-select: none;
 }
 
+#root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* --- Header --- */
 .header {
   text-align: center;
@@ -171,6 +178,18 @@ body {
   width: 100%;
   max-width: 800px;
   animation: fade-in 0.4s ease;
+}
+
+@media (width >= 1024px) {
+  .container-wide {
+    max-width: 1200px;
+  }
+}
+
+@media (width >= 1440px) {
+  .container-wide {
+    max-width: 1600px;
+  }
 }
 
 @keyframes fade-in {
