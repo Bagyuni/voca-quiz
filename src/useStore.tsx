@@ -7,19 +7,19 @@ import {
   useMemo,
   useState,
 } from 'react';
-import type { Word } from './types';
+import type { Word, WordId } from './types';
 import { loadCache, loadFromSheet, saveCache } from './words';
 
 const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
-const STORAGE_KEY = 'jp_vocab_dynamic_hard_v2';
+const STORAGE_KEY = 'jp_vocab_dynamic_hard_v3';
 
 export interface StoreContextValue {
   allWords: Word[];
   currentDay: string;
   daysAvailable: string[];
   currentMode: 'study' | 'quiz';
-  hardWords: Set<string>;
+  hardWords: Set<WordId>;
   loading: boolean;
   error: string | null;
   syncing: boolean;
@@ -27,7 +27,7 @@ export interface StoreContextValue {
   syncDiff: number;
   setMode: (mode: 'study' | 'quiz') => void;
   setDay: (day: string) => void;
-  toggleHard: (id: string) => void;
+  toggleHard: (id: WordId) => void;
   getFilteredWords: () => Word[];
   syncFromSheet: () => void;
 }
@@ -38,12 +38,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [allWords, setAllWords] = useState<Word[]>([]);
   const [currentDay, setCurrentDay] = useState('all');
   const [currentMode, setCurrentMode] = useState<'study' | 'quiz'>('study');
-  const [hardWords, setHardWords] = useState<Set<string>>(() => {
+  const [hardWords, setHardWords] = useState<Set<WordId>>(() => {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? new Set(JSON.parse(data)) : new Set();
+      return data ? new Set<WordId>(JSON.parse(data)) : new Set<WordId>();
     } catch {
-      return new Set();
+      return new Set<WordId>();
     }
   });
   const [loading, setLoading] = useState(true);
@@ -90,7 +90,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       .finally(() => setSyncing(false));
   }, []);
 
-  const toggleHard = useCallback((id: string) => {
+  const toggleHard = useCallback((id: WordId) => {
     setHardWords((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);

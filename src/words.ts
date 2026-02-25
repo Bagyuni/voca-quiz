@@ -1,4 +1,4 @@
-import type { Word } from './types';
+import { type Word, wordId } from './types';
 
 const WORDS_CACHE_KEY = 'jp_vocab_words_cache';
 
@@ -20,7 +20,15 @@ function normalizeWord(
     hira = '';
   }
 
-  return { id: `w_${kanji}_${hira}`, day, kanji, hira, mean, ex, exKr };
+  return {
+    id: wordId(day, kanji, hira, mean),
+    day,
+    kanji,
+    hira,
+    mean,
+    ex,
+    exKr,
+  };
 }
 
 interface GvizCell {

@@ -1,5 +1,31 @@
 import { describe, expect, test } from 'bun:test';
+import { wordId } from './types';
 import { parseSheetResponse } from './words';
+
+describe('wordId', () => {
+  test('returns a number', () => {
+    const id = wordId('1', '今日', 'きょう', '오늘');
+    expect(typeof id).toBe('number');
+  });
+
+  test('same inputs produce same hash', () => {
+    const a = wordId('1', '今日', 'きょう', '오늘');
+    const b = wordId('1', '今日', 'きょう', '오늘');
+    expect(a).toBe(b);
+  });
+
+  test('different day produces different hash', () => {
+    const a = wordId('1', '今日', 'きょう', '오늘');
+    const b = wordId('2', '今日', 'きょう', '오늘');
+    expect(a).not.toBe(b);
+  });
+
+  test('different mean produces different hash', () => {
+    const a = wordId('1', '生', 'なま', '날것');
+    const b = wordId('1', '生', 'なま', '생명');
+    expect(a).not.toBe(b);
+  });
+});
 
 describe('parseSheetResponse', () => {
   type CellVal = string | number | null;
@@ -39,7 +65,7 @@ describe('parseSheetResponse', () => {
     const words = parseSheetResponse(response);
     expect(words).toHaveLength(1);
     expect(words[0]).toEqual({
-      id: 'w_今日_きょう',
+      id: wordId('1', '今日', 'きょう', '오늘'),
       day: '1',
       kanji: '今日',
       hira: 'きょう',
