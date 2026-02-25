@@ -560,22 +560,37 @@ body {
   border: none;
 }
 
+.wi-star-btn {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: rgb(255 255 255 / 10%);
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.wi-star-btn:hover {
+  color: rgb(255 255 255 / 40%);
+}
+
 .wrong-item .wi-kanji {
   font-family: "Noto Sans JP", sans-serif;
   font-weight: 700;
-  flex: 0 0 30%;
+  flex: 0 0 27%;
   text-align: center;
 }
 
 .wrong-item .wi-reading {
   color: var(--reveal);
-  flex: 0 0 30%;
+  flex: 0 0 27%;
   text-align: center;
 }
 
 .wrong-item .wi-meaning {
   color: var(--text-dim);
-  flex: 0 0 40%;
+  flex: 0 0 36%;
   text-align: center;
 }
 

@@ -1,10 +1,12 @@
-import type { Word } from './types';
+import type { Word, WordId } from './types';
 
 interface Props {
   correct: number;
   wrong: number;
   total: number;
   wrongWords: Word[];
+  hardWords: Set<WordId>;
+  toggleHard: (id: WordId) => void;
   onRetryAll: () => void;
   onRetryWrong: () => void;
 }
@@ -14,6 +16,8 @@ export function ResultScreen({
   wrong,
   total,
   wrongWords,
+  hardWords,
+  toggleHard,
   onRetryAll,
   onRetryWrong,
 }: Props) {
@@ -61,6 +65,18 @@ export function ResultScreen({
               <div>
                 {wrongWords.map((w) => (
                   <div key={w.id} className="wrong-item">
+                    <button
+                      type="button"
+                      className="wi-star-btn"
+                      onClick={() => toggleHard(w.id)}
+                      style={
+                        hardWords.has(w.id)
+                          ? { color: 'var(--star)' }
+                          : undefined
+                      }
+                    >
+                      {hardWords.has(w.id) ? '★' : '☆'}
+                    </button>
                     <span className="wi-kanji">{w.kanji}</span>
                     <span className="wi-reading">{w.hira}</span>
                     <span className="wi-meaning">{w.mean}</span>

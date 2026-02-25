@@ -61,9 +61,6 @@ export function QuizMode() {
       } else {
         setWrong((prev) => prev + 1);
         setWrongWords((prev) => [...prev, currentWord]);
-        if (!hardWords.has(currentWord.id)) {
-          toggleHard(currentWord.id);
-        }
       }
 
       setRevealed(false);
@@ -78,7 +75,7 @@ export function QuizMode() {
         }
       }, 300);
     },
-    [revealed, words, idx, hardWords, toggleHard],
+    [revealed, words, idx],
   );
 
   const retryWrong = useCallback(() => {
@@ -116,6 +113,8 @@ export function QuizMode() {
         wrong={wrong}
         total={words.length}
         wrongWords={wrongWords}
+        hardWords={hardWords}
+        toggleHard={toggleHard}
         onRetryAll={() => initQuiz()}
         onRetryWrong={retryWrong}
       />
