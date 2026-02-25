@@ -1,3 +1,4 @@
+import { useDragScroll } from './useDragScroll';
 import { useStore } from './useStore';
 import { cn } from './utils';
 
@@ -13,6 +14,8 @@ export function Header() {
     syncDiff,
     syncFromSheet,
   } = useStore();
+
+  const tabsRef = useDragScroll<HTMLDivElement>();
 
   const syncBtnText = syncing
     ? '↻ 동기화 중...'
@@ -61,7 +64,7 @@ export function Header() {
         </button>
       </div>
 
-      <div className="day-tabs">
+      <div className="day-tabs" ref={tabsRef}>
         <button
           type="button"
           className={cn('day-btn', currentDay === 'all' && 'active')}

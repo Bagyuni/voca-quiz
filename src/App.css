@@ -28,6 +28,7 @@ body {
   align-items: center;
   padding: 24px;
   user-select: none;
+  overflow-x: hidden;
 }
 
 /* --- Header --- */
@@ -124,12 +125,19 @@ body {
 /* --- Day Tabs --- */
 .day-tabs {
   display: flex;
-  justify-content: center;
   gap: 8px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 800px;
+  max-width: calc(100vw - 48px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  cursor: grab;
+  touch-action: pan-x;
+}
+
+.day-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .day-btn {
@@ -143,6 +151,8 @@ body {
   font-weight: 700;
   transition: all 0.2s;
   font-family: "Noto Sans KR", sans-serif;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .day-btn:hover {
