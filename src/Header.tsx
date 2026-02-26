@@ -42,10 +42,8 @@ export function Header() {
 
   return (
     <div className="header">
-      <div className="title-row">
-        <h1>
-          JLPT <span>단어장</span>
-        </h1>
+      <h1>
+        JLPT <span>단어장</span>
         <button
           type="button"
           className={cn(
@@ -58,7 +56,7 @@ export function Header() {
         >
           {syncIcon}
         </button>
-      </div>
+      </h1>
 
       <div className="mode-switch">
         <button
