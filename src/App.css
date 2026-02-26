@@ -151,7 +151,7 @@ body {
 .day-tabs::before,
 .day-tabs::after {
   content: "";
-  flex: 0 0 16px;
+  flex: 1 0 16px;
 }
 
 .day-tabs::-webkit-scrollbar {
