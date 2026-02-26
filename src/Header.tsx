@@ -18,27 +18,22 @@ export function Header() {
 
   const tabsRef = useDragScroll<HTMLDivElement>();
 
-  // 선택된 탭이 보이도록 스크롤
+  // 선택된 탭이 잘리지 않도록 중앙으로 스크롤
   const day = currentDay;
   const days = daysAvailable;
   useEffect(() => {
-    // day, days를 참조하여 변경 시 재실행
     if (!day || days.length === 0) return;
     const container = tabsRef.current;
     if (!container) return;
     const active = container.querySelector<HTMLElement>('.day-btn.active');
     if (!active) return;
-
-    const cRect = container.getBoundingClientRect();
-    const aRect = active.getBoundingClientRect();
-
-    if (aRect.left < cRect.left || aRect.right > cRect.right) {
+    // 탭이 넘칠 때만 스크롤 (넘치지 않으면 부모 flex가 중앙정렬)
+    if (container.scrollWidth > container.clientWidth) {
       container.scrollTo({
         left:
           active.offsetLeft -
-          container.offsetWidth / 2 +
+          container.clientWidth / 2 +
           active.offsetWidth / 2,
-        behavior: 'smooth',
       });
     }
   }, [day, days, tabsRef]);

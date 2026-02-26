@@ -131,7 +131,6 @@ body {
 /* --- Day Tabs --- */
 .day-tabs {
   display: flex;
-  justify-content: center;
   gap: 8px;
   margin-bottom: 24px;
   max-width: calc(100vw - 48px);
@@ -141,6 +140,13 @@ body {
   padding-bottom: 4px;
   cursor: grab;
   touch-action: pan-x;
+}
+
+/* 양쪽 끝 탭이 잘리지 않도록 스크롤 여유 공간 확보 */
+.day-tabs::before,
+.day-tabs::after {
+  content: "";
+  flex: 0 0 16px;
 }
 
 .day-tabs::-webkit-scrollbar {
