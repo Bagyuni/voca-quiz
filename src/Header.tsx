@@ -12,7 +12,6 @@ export function Header() {
     daysAvailable,
     syncing,
     syncStatus,
-    syncDiff,
     syncFromSheet,
   } = useStore();
 
@@ -38,15 +37,8 @@ export function Header() {
     }
   }, [day, days, tabsRef]);
 
-  const syncBtnText = syncing
-    ? '↻ 동기화 중...'
-    : syncStatus === 'done'
-      ? syncDiff > 0
-        ? `✓ +${syncDiff}개 동기화 완료`
-        : '✓ 최신 상태'
-      : syncStatus === 'fail'
-        ? '✗ 동기화 실패'
-        : '↻ 동기화';
+  const syncIcon =
+    syncStatus === 'done' ? '✓' : syncStatus === 'fail' ? '✗' : '↻';
 
   return (
     <div className="header">
@@ -64,7 +56,7 @@ export function Header() {
           )}
           onClick={syncFromSheet}
         >
-          {syncBtnText}
+          {syncIcon}
         </button>
       </div>
 

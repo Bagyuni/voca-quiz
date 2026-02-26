@@ -66,15 +66,16 @@ body {
 }
 
 .sync-btn {
-  padding: 6px 14px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   background: var(--card);
   border: 1px solid rgb(255 255 255 / 10%);
   color: var(--text-dim);
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-family: "Noto Sans KR", sans-serif;
+  font-size: 1rem;
+  line-height: 1;
   transition: all 0.2s;
 }
 
@@ -85,7 +86,13 @@ body {
 
 .sync-btn.syncing {
   pointer-events: none;
-  opacity: 0.5;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .sync-btn.done {
