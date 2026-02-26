@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useDragScroll } from './useDragScroll';
 import { useStore } from './useStore';
 import { cn } from './utils';
@@ -16,6 +17,31 @@ export function Header() {
   } = useStore();
 
   const tabsRef = useDragScroll<HTMLDivElement>();
+
+  // 선택된 탭이 보이도록 스크롤
+  const day = currentDay;
+  const days = daysAvailable;
+  useEffect(() => {
+    // day, days를 참조하여 변경 시 재실행
+    if (!day || days.length === 0) return;
+    const container = tabsRef.current;
+    if (!container) return;
+    const active = container.querySelector<HTMLElement>('.day-btn.active');
+    if (!active) return;
+
+    const cRect = container.getBoundingClientRect();
+    const aRect = active.getBoundingClientRect();
+
+    if (aRect.left < cRect.left || aRect.right > cRect.right) {
+      container.scrollTo({
+        left:
+          active.offsetLeft -
+          container.offsetWidth / 2 +
+          active.offsetWidth / 2,
+        behavior: 'smooth',
+      });
+    }
+  }, [day, days, tabsRef]);
 
   const syncBtnText = syncing
     ? '↻ 동기화 중...'
