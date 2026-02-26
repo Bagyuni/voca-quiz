@@ -63,9 +63,9 @@ body {
   position: absolute;
   top: 50%;
   left: calc(100% + 8px);
-  transform: translateY(-60%);
-  width: 36px;
-  height: 36px;
+  transform: translateY(-40%);
+  width: 32px;
+  height: 32px;
   padding: 0;
   background: var(--card);
   border: 1px solid rgb(255 255 255 / 10%);
