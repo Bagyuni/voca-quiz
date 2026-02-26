@@ -61,8 +61,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   margin-bottom: 20px;
-  position: relative;
 }
 
 .sync-btn {
@@ -103,11 +103,6 @@ body {
 .sync-btn.fail {
   border-color: var(--wrong);
   color: var(--wrong);
-}
-
-.title-row .sync-btn {
-  position: absolute;
-  right: 0;
 }
 
 .mode-switch {
