@@ -1,4 +1,29 @@
+import confetti from 'canvas-confetti';
+import { useEffect } from 'react';
 import type { Word, WordId } from './types';
+
+function fireConfetti(pct: number) {
+  if (pct === 100) {
+    // 화려한 연출: 좌우에서 3회 burst
+    const defaults = { startVelocity: 30, spread: 60, ticks: 80 };
+    const shoot = (angle: number, origin: { x: number }) =>
+      confetti({ ...defaults, particleCount: 50, angle, origin });
+    shoot(60, { x: 0 });
+    shoot(120, { x: 1 });
+    setTimeout(() => {
+      shoot(60, { x: 0 });
+      shoot(120, { x: 1 });
+    }, 200);
+    setTimeout(() => {
+      shoot(60, { x: 0 });
+      shoot(120, { x: 1 });
+    }, 400);
+  } else if (pct >= 80) {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  } else if (pct >= 50) {
+    confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } });
+  }
+}
 
 interface Props {
   correct: number;
@@ -22,6 +47,10 @@ export function ResultScreen({
   onRetryWrong,
 }: Props) {
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  useEffect(() => {
+    fireConfetti(pct);
+  }, [pct]);
   const scoreColor =
     pct >= 80 ? 'var(--correct)' : pct >= 50 ? 'var(--reveal)' : 'var(--wrong)';
   const label =
