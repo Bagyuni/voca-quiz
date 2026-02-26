@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import type { Word, WordId } from './types';
@@ -64,12 +65,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, [allWords]);
 
-  // 데이터 로드 시 마지막 day를 기본 선택
+  // 최초 로드 시에만 마지막 day를 기본 선택
+  const initialDaySet = useRef(false);
   useEffect(() => {
-    if (daysAvailable.length > 0 && currentDay === 'all') {
+    if (!initialDaySet.current && daysAvailable.length > 0) {
+      initialDaySet.current = true;
       setCurrentDay(daysAvailable[daysAvailable.length - 1]);
     }
-  }, [daysAvailable, currentDay]);
+  }, [daysAvailable]);
 
   const getFilteredWords = useCallback(() => {
     if (currentDay === 'all') return allWords;
