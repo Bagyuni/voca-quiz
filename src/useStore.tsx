@@ -64,6 +64,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, [allWords]);
 
+  // 데이터 로드 시 마지막 day를 기본 선택
+  useEffect(() => {
+    if (daysAvailable.length > 0 && currentDay === 'all') {
+      setCurrentDay(daysAvailable[daysAvailable.length - 1]);
+    }
+  }, [daysAvailable, currentDay]);
+
   const getFilteredWords = useCallback(() => {
     if (currentDay === 'all') return allWords;
     return allWords.filter((w) => String(w.day) === String(currentDay));

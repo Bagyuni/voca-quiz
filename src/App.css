@@ -131,6 +131,7 @@ body {
 /* --- Day Tabs --- */
 .day-tabs {
   display: flex;
+  justify-content: center;
   gap: 8px;
   margin-bottom: 24px;
   max-width: calc(100vw - 48px);
