@@ -137,7 +137,7 @@ body {
 .day-tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   max-width: calc(100vw - 48px);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
