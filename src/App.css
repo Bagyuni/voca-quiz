@@ -381,6 +381,67 @@ body {
   transform: translateY(-2px);
 }
 
+.lock-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20vh;
+  padding: 0 24px;
+}
+
+.lock-title {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.lock-input {
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  background: var(--card);
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 8px;
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    transform 0.1s;
+}
+
+.lock-input:focus {
+  border-color: var(--accent);
+}
+
+.lock-input.is-wrong {
+  border-color: var(--wrong);
+  animation: lock-shake 0.4s;
+}
+
+@keyframes lock-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.lock-submit {
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lock-submit:hover {
+  background: #d63a55;
+}
+
 .sc-hira {
   font-size: 1.1rem;
   color: var(--reveal);

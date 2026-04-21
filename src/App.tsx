@@ -1,4 +1,5 @@
 import { Header } from './Header';
+import { Lock } from './Lock';
 import { QuizMode } from './QuizMode';
 import { StudyMode } from './StudyMode';
 import { StoreProvider, useStore } from './useStore';
@@ -43,8 +44,10 @@ function AppContent() {
 
 export function App() {
   return (
-    <StoreProvider>
-      <AppContent />
-    </StoreProvider>
+    <Lock>
+      <StoreProvider>
+        <AppContent />
+      </StoreProvider>
+    </Lock>
   );
 }
