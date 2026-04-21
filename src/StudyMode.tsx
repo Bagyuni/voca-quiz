@@ -6,6 +6,7 @@ import { cn } from './utils';
 export function StudyMode() {
   const { getFilteredWords, hardWords, toggleHard } = useStore();
   const [hardFilterOn, setHardFilterOn] = useState(false);
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   const words = getFilteredWords();
   const displayWords = hardFilterOn
@@ -31,6 +32,8 @@ export function StudyMode() {
             word={w}
             isHard={hardWords.has(w.id)}
             onToggleHard={() => toggleHard(w.id)}
+            openKey={openKey}
+            setOpenKey={setOpenKey}
           />
         ))}
       </div>

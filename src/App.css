@@ -303,6 +303,57 @@ body {
   margin-bottom: 8px;
   color: #fff;
   margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.kanji-char {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0 2px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.kanji-char:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.kanji-char.is-open {
+  background: rgb(255 255 255 / 12%);
+}
+
+.kanji-hint {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-hover, #2a2a3e);
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: system-ui, sans-serif;
+  white-space: nowrap;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.kh-hun {
+  color: #4a90c2;
+}
+
+.kh-eum {
+  color: #9ecfff;
+}
+
+.kh-sep {
+  color: var(--text-dim);
 }
 
 .sc-hira {
