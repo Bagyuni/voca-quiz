@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StudyCard } from './StudyCard';
 import { useStore } from './useStore';
 import { cn } from './utils';
@@ -7,6 +7,14 @@ export function StudyMode() {
   const { getFilteredWords, hardWords, toggleHard } = useStore();
   const [hardFilterOn, setHardFilterOn] = useState(false);
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 400);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const words = getFilteredWords();
   const displayWords = hardFilterOn
@@ -37,6 +45,16 @@ export function StudyMode() {
           />
         ))}
       </div>
+      {showTop && (
+        <button
+          type="button"
+          className="scroll-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="맨 위로"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }

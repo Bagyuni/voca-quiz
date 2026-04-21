@@ -356,6 +356,31 @@ body {
   color: var(--text-dim);
 }
 
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--card-hover);
+  border: 1px solid rgb(255 255 255 / 15%);
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+  transition:
+    transform 0.15s,
+    background 0.15s;
+  z-index: 10;
+}
+
+.scroll-top-btn:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+}
+
 .sc-hira {
   font-size: 1.1rem;
   color: var(--reveal);
