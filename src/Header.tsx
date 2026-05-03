@@ -90,7 +90,7 @@ export function Header() {
             className={cn('day-btn', currentDay === d && 'active')}
             onClick={() => setDay(d)}
           >
-            Day {d}
+            {d}
           </button>
         ))}
       </div>
