@@ -34,9 +34,9 @@ export function StudyMode() {
         </label>
       </div>
       <div className="study-grid">
-        {displayWords.map((w) => (
+        {displayWords.map((w, i) => (
           <StudyCard
-            key={w.id}
+            key={`${w.id}-${i}`}
             word={w}
             isHard={hardWords.has(w.id)}
             onToggleHard={() => toggleHard(w.id)}

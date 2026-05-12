@@ -4,25 +4,25 @@ import { parseSheetResponse } from './words';
 
 describe('wordId', () => {
   test('returns a number', () => {
-    const id = wordId('1', '今日', 'きょう', '오늘');
+    const id = wordId('今日', 'きょう');
     expect(typeof id).toBe('number');
   });
 
   test('same inputs produce same hash', () => {
-    const a = wordId('1', '今日', 'きょう', '오늘');
-    const b = wordId('1', '今日', 'きょう', '오늘');
+    const a = wordId('今日', 'きょう');
+    const b = wordId('今日', 'きょう');
     expect(a).toBe(b);
   });
 
-  test('different day produces different hash', () => {
-    const a = wordId('1', '今日', 'きょう', '오늘');
-    const b = wordId('2', '今日', 'きょう', '오늘');
+  test('different kanji produces different hash', () => {
+    const a = wordId('橋', 'はし');
+    const b = wordId('箸', 'はし');
     expect(a).not.toBe(b);
   });
 
-  test('different mean produces different hash', () => {
-    const a = wordId('1', '生', 'なま', '날것');
-    const b = wordId('1', '生', 'なま', '생명');
+  test('different hira produces different hash', () => {
+    const a = wordId('端', 'はし');
+    const b = wordId('端', 'たん');
     expect(a).not.toBe(b);
   });
 });
@@ -65,7 +65,7 @@ describe('parseSheetResponse', () => {
     const words = parseSheetResponse(response);
     expect(words).toHaveLength(1);
     expect(words[0]).toEqual({
-      id: wordId('1', '今日', 'きょう', '오늘'),
+      id: wordId('今日', 'きょう'),
       day: '1',
       kanji: '今日',
       hira: 'きょう',

@@ -92,8 +92,8 @@ export function ResultScreen({
             <div className="wrong-list">
               <h3>✗ 틀린 단어 복습</h3>
               <div>
-                {wrongWords.map((w) => (
-                  <div key={w.id} className="wrong-item">
+                {wrongWords.map((w, i) => (
+                  <div key={`${w.id}-${i}`} className="wrong-item">
                     <button
                       type="button"
                       className="wi-star-btn"
