@@ -13,7 +13,7 @@ import { loadCache, loadFromSheet, saveCache } from './words';
 
 const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
-const STORAGE_KEY = 'jp_vocab_dynamic_hard_v3';
+const STORAGE_KEY = 'jp_vocab_dynamic_hard_v4';
 
 export interface StoreContextValue {
   allWords: Word[];

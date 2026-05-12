@@ -21,7 +21,7 @@ function normalizeWord(
   }
 
   return {
-    id: wordId(day, kanji, hira, mean),
+    id: wordId(kanji, hira),
     day,
     kanji,
     hira,
