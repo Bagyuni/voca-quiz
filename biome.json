@@ -6,7 +6,8 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false
+		"ignoreUnknown": false,
+		"includes": ["**", "!src/hanja-dict.json"]
 	},
 	"formatter": {
 		"enabled": true,
