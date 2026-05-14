@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDragScroll } from './useDragScroll';
 import { useStore } from './useStore';
 import { cn } from './utils';
@@ -9,6 +9,8 @@ export function Header() {
     setMode,
     currentDay,
     setDay,
+    dayRange,
+    setDayRange,
     daysAvailable,
     syncing,
     syncStatus,
@@ -16,6 +18,11 @@ export function Header() {
   } = useStore();
 
   const tabsRef = useDragScroll<HTMLDivElement>();
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const [pendingStart, setPendingStart] = useState<string>('');
+  const [pendingEnd, setPendingEnd] = useState<string>('');
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const rangeBtnRef = useRef<HTMLButtonElement>(null);
 
   // 선택된 탭이 잘리지 않도록 중앙으로 스크롤
   const day = currentDay;
@@ -36,6 +43,39 @@ export function Header() {
       });
     }
   }, [day, days, tabsRef]);
+
+  // 팝오버 외부 클릭 시 닫기
+  useEffect(() => {
+    if (!rangeOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (popoverRef.current?.contains(target)) return;
+      if (rangeBtnRef.current?.contains(target)) return;
+      setRangeOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [rangeOpen]);
+
+  const openRangePopover = () => {
+    if (daysAvailable.length === 0) return;
+    const fallbackStart = daysAvailable[0];
+    const fallbackEnd = daysAvailable[daysAvailable.length - 1];
+    setPendingStart(dayRange?.start ?? fallbackStart);
+    setPendingEnd(dayRange?.end ?? fallbackEnd);
+    setRangeOpen((v) => !v);
+  };
+
+  const applyRange = () => {
+    if (!pendingStart || !pendingEnd) return;
+    setDayRange({ start: pendingStart, end: pendingEnd });
+    setRangeOpen(false);
+  };
+
+  const isRangeActive = currentDay === 'range' && dayRange !== null;
+  const rangeLabel = isRangeActive
+    ? `${dayRange.start}~${dayRange.end}`
+    : '범위';
 
   const syncIcon =
     syncStatus === 'done' ? '✓' : syncStatus === 'fail' ? '✗' : '↻';
@@ -75,7 +115,7 @@ export function Header() {
         </button>
       </div>
 
-      <div className="day-tabs" ref={tabsRef}>
+      <div className="day-pinned">
         <button
           type="button"
           className={cn('day-btn', currentDay === 'all' && 'active')}
@@ -83,6 +123,64 @@ export function Header() {
         >
           전체
         </button>
+        <div className="range-wrap">
+          <button
+            ref={rangeBtnRef}
+            type="button"
+            className={cn(
+              'day-btn',
+              'range-btn',
+              isRangeActive && 'active',
+              rangeOpen && 'open',
+            )}
+            onClick={openRangePopover}
+          >
+            {isRangeActive ? `📐 ${rangeLabel}` : '📐 범위'}
+          </button>
+          {rangeOpen && (
+            <div className="range-popover" ref={popoverRef}>
+              <div className="range-row">
+                <label className="range-field">
+                  <span>시작</span>
+                  <select
+                    value={pendingStart}
+                    onChange={(e) => setPendingStart(e.target.value)}
+                  >
+                    {daysAvailable.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <span className="range-dash">~</span>
+                <label className="range-field">
+                  <span>끝</span>
+                  <select
+                    value={pendingEnd}
+                    onChange={(e) => setPendingEnd(e.target.value)}
+                  >
+                    {daysAvailable.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <button
+                type="button"
+                className="range-apply"
+                onClick={applyRange}
+              >
+                적용
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="day-tabs" ref={tabsRef}>
         {daysAvailable.map((d) => (
           <button
             type="button"
