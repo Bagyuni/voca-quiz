@@ -5,7 +5,7 @@ import { StudyMode } from './StudyMode';
 import { StoreProvider, useStore } from './useStore';
 
 function AppContent() {
-  const { loading, error, currentMode, currentDay } = useStore();
+  const { loading, error, currentMode, currentDay, dayRange } = useStore();
 
   if (loading) {
     return (
@@ -37,7 +37,15 @@ function AppContent() {
     <>
       <Header />
       {currentMode === 'study' && <StudyMode />}
-      {currentMode === 'quiz' && <QuizMode key={`quiz-${currentDay}`} />}
+      {currentMode === 'quiz' && (
+        <QuizMode
+          key={
+            currentDay === 'range' && dayRange
+              ? `quiz-range-${dayRange.start}-${dayRange.end}`
+              : `quiz-${currentDay}`
+          }
+        />
+      )}
     </>
   );
 }

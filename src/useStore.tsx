@@ -15,9 +15,15 @@ const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v4';
 
+export interface DayRange {
+  start: string;
+  end: string;
+}
+
 export interface StoreContextValue {
   allWords: Word[];
   currentDay: string;
+  dayRange: DayRange | null;
   daysAvailable: string[];
   currentMode: 'study' | 'quiz';
   hardWords: Set<WordId>;
@@ -28,6 +34,7 @@ export interface StoreContextValue {
   syncDiff: number;
   setMode: (mode: 'study' | 'quiz') => void;
   setDay: (day: string) => void;
+  setDayRange: (range: DayRange) => void;
   toggleHard: (id: WordId) => void;
   getFilteredWords: () => Word[];
   syncFromSheet: () => void;
@@ -38,6 +45,7 @@ const StoreContext = createContext<StoreContextValue | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [allWords, setAllWords] = useState<Word[]>([]);
   const [currentDay, setCurrentDay] = useState('all');
+  const [dayRange, setDayRangeState] = useState<DayRange | null>(null);
   const [currentMode, setCurrentMode] = useState<'study' | 'quiz'>('study');
   const [hardWords, setHardWords] = useState<Set<WordId>>(() => {
     try {
@@ -76,8 +84,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const getFilteredWords = useCallback(() => {
     if (currentDay === 'all') return allWords;
+    if (currentDay === 'range' && dayRange) {
+      const startIdx = daysAvailable.indexOf(dayRange.start);
+      const endIdx = daysAvailable.indexOf(dayRange.end);
+      if (startIdx === -1 || endIdx === -1) return allWords;
+      const [lo, hi] =
+        startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
+      const included = new Set(daysAvailable.slice(lo, hi + 1));
+      return allWords.filter((w) => included.has(String(w.day)));
+    }
     return allWords.filter((w) => String(w.day) === String(currentDay));
-  }, [allWords, currentDay]);
+  }, [allWords, currentDay, dayRange, daysAvailable]);
 
   useEffect(() => {
     const cached = loadCache();
@@ -118,6 +135,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCurrentDay(day);
   }, []);
 
+  const setDayRange = useCallback((range: DayRange) => {
+    setDayRangeState(range);
+    setCurrentDay('range');
+  }, []);
+
   const syncFromSheet = useCallback(() => {
     setSyncing(true);
     setSyncStatus('idle');
@@ -142,6 +164,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value: StoreContextValue = {
     allWords,
     currentDay,
+    dayRange,
     daysAvailable,
     currentMode,
     hardWords,
@@ -152,6 +175,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     syncDiff,
     setMode,
     setDay,
+    setDayRange,
     toggleHard,
     getFilteredWords,
     syncFromSheet,
