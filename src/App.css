@@ -573,19 +573,23 @@ body {
   top: 0;
   background: var(--accent2);
   color: var(--text);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 700;
   text-align: left;
-  padding: 10px 12px;
+  padding: 11px 12px;
   letter-spacing: 0.04em;
   z-index: 1;
 }
 
 .word-table tbody td {
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-top: 1px solid rgb(255 255 255 / 5%);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   vertical-align: middle;
+}
+
+.wt-row {
+  cursor: pointer;
 }
 
 .wt-row:hover td {
@@ -611,7 +615,7 @@ body {
 .wt-star-btn {
   background: none;
   border: none;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   color: rgb(255 255 255 / 18%);
   cursor: pointer;
   padding: 2px 6px;
@@ -629,17 +633,17 @@ body {
 
 .word-table th.wt-day,
 .word-table td.wt-day {
-  width: 56px;
+  width: 60px;
   color: var(--text-dim);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .word-table td.wt-kanji {
   font-family: "Noto Sans JP", sans-serif;
   font-weight: 700;
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   white-space: nowrap;
 }
 
@@ -647,6 +651,7 @@ body {
   font-family: "Noto Sans JP", sans-serif;
   color: var(--reveal);
   font-weight: 600;
+  font-size: 1.05rem;
   white-space: nowrap;
 }
 
@@ -657,36 +662,62 @@ body {
 @media (width <= 640px) {
   .word-table thead th,
   .word-table tbody td {
-    padding: 8px 6px;
-    font-size: 0.85rem;
+    padding: 9px 6px;
+    font-size: 0.95rem;
   }
 
   .word-table th.wt-star,
   .word-table td.wt-star {
-    width: 28px;
+    width: 30px;
     padding-left: 4px;
   }
 
   .wt-star-btn {
-    font-size: 1rem;
+    font-size: 1.1rem;
     padding: 2px;
   }
 
   .word-table td.wt-kanji {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     white-space: normal;
   }
 
   .word-table td.wt-hira {
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     white-space: normal;
   }
 
   .word-table th.wt-day,
   .word-table td.wt-day {
-    width: 36px;
-    font-size: 0.75rem;
+    width: 40px;
+    font-size: 0.85rem;
   }
+}
+
+/* --- Word Modal (table row tap) --- */
+.word-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 65%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fade-in 0.15s ease;
+}
+
+.word-modal {
+  width: 100%;
+  max-width: 360px;
+}
+
+.word-modal .study-card {
+  cursor: default;
+}
+
+.word-modal .study-card:hover {
+  transform: none;
 }
 
 /* --- Quiz Mode --- */
