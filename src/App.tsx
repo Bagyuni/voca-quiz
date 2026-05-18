@@ -2,6 +2,7 @@ import { Header } from './Header';
 import { Lock } from './Lock';
 import { QuizMode } from './QuizMode';
 import { StudyMode } from './StudyMode';
+import { TableMode } from './TableMode';
 import { StoreProvider, useStore } from './useStore';
 
 function AppContent() {
@@ -37,6 +38,7 @@ function AppContent() {
     <>
       <Header />
       {currentMode === 'study' && <StudyMode />}
+      {currentMode === 'table' && <TableMode />}
       {currentMode === 'quiz' && (
         <QuizMode
           key={

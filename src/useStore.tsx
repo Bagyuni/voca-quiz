@@ -14,6 +14,9 @@ import { loadCache, loadFromSheet, saveCache } from './words';
 const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v4';
+const QUIZ_LIMIT_KEY = 'jp_vocab_quiz_limit_v1';
+
+export type QuizLimit = number | 'all';
 
 export interface DayRange {
   start: string;
@@ -25,14 +28,16 @@ export interface StoreContextValue {
   currentDay: string;
   dayRange: DayRange | null;
   daysAvailable: string[];
-  currentMode: 'study' | 'quiz';
+  currentMode: 'study' | 'quiz' | 'table';
   hardWords: Set<WordId>;
   loading: boolean;
   error: string | null;
   syncing: boolean;
   syncStatus: 'idle' | 'done' | 'fail';
   syncDiff: number;
-  setMode: (mode: 'study' | 'quiz') => void;
+  quizLimit: QuizLimit;
+  setQuizLimit: (limit: QuizLimit) => void;
+  setMode: (mode: 'study' | 'quiz' | 'table') => void;
   setDay: (day: string) => void;
   setDayRange: (range: DayRange) => void;
   toggleHard: (id: WordId) => void;
@@ -46,7 +51,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [allWords, setAllWords] = useState<Word[]>([]);
   const [currentDay, setCurrentDay] = useState('all');
   const [dayRange, setDayRangeState] = useState<DayRange | null>(null);
-  const [currentMode, setCurrentMode] = useState<'study' | 'quiz'>('study');
+  const [currentMode, setCurrentMode] = useState<'study' | 'quiz' | 'table'>(
+    'study',
+  );
   const [hardWords, setHardWords] = useState<Set<WordId>>(() => {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -62,6 +69,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     'idle',
   );
   const [syncDiff, setSyncDiff] = useState(0);
+  const [quizLimit, setQuizLimitState] = useState<QuizLimit>(() => {
+    try {
+      const raw = localStorage.getItem(QUIZ_LIMIT_KEY);
+      if (raw === null) return 'all';
+      if (raw === 'all') return 'all';
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) && n > 0 ? n : 'all';
+    } catch {
+      return 'all';
+    }
+  });
+
+  const setQuizLimit = useCallback((limit: QuizLimit) => {
+    setQuizLimitState(limit);
+    try {
+      localStorage.setItem(QUIZ_LIMIT_KEY, String(limit));
+    } catch {}
+  }, []);
 
   const daysAvailable = useMemo(() => {
     const days = Array.from(new Set(allWords.map((w) => w.day)));
@@ -127,7 +152,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const setMode = useCallback((mode: 'study' | 'quiz') => {
+  const setMode = useCallback((mode: 'study' | 'quiz' | 'table') => {
     setCurrentMode(mode);
   }, []);
 
@@ -173,6 +198,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     syncing,
     syncStatus,
     syncDiff,
+    quizLimit,
+    setQuizLimit,
     setMode,
     setDay,
     setDayRange,

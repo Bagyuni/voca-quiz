@@ -2,11 +2,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { QuizCard } from './QuizCard';
 import { ResultScreen } from './ResultScreen';
 import type { Word } from './types';
-import { useStore } from './useStore';
+import { type QuizLimit, useStore } from './useStore';
 import { cn, shuffle } from './utils';
 
+const LIMIT_PRESETS: QuizLimit[] = [10, 20, 30, 50, 'all'];
+
 export function QuizMode() {
-  const { getFilteredWords, hardWords, toggleHard, setMode } = useStore();
+  const {
+    getFilteredWords,
+    hardWords,
+    toggleHard,
+    setMode,
+    quizLimit,
+    setQuizLimit,
+  } = useStore();
 
   const [words, setWords] = useState<Word[]>([]);
   const [idx, setIdx] = useState(0);
@@ -17,14 +26,20 @@ export function QuizMode() {
   const [phase, setPhase] = useState<'active' | 'result'>('active');
 
   const initQuiz = useCallback(
-    (subset?: Word[]) => {
+    (subset?: Word[], limitOverride?: QuizLimit) => {
       const base = subset || getFilteredWords();
       if (base.length === 0) {
         alert('해당 조건의 단어가 없습니다.');
         setMode('study');
         return;
       }
-      setWords(shuffle(base));
+      const shuffled = shuffle(base);
+      const limit = limitOverride ?? quizLimit;
+      const sliced =
+        limit === 'all'
+          ? shuffled
+          : shuffled.slice(0, Math.min(limit, shuffled.length));
+      setWords(sliced);
       setIdx(0);
       setCorrect(0);
       setWrong(0);
@@ -32,7 +47,15 @@ export function QuizMode() {
       setWrongWords([]);
       setPhase('active');
     },
-    [getFilteredWords, setMode],
+    [getFilteredWords, setMode, quizLimit],
+  );
+
+  const changeLimit = useCallback(
+    (limit: QuizLimit) => {
+      setQuizLimit(limit);
+      initQuiz(undefined, limit);
+    },
+    [setQuizLimit, initQuiz],
   );
 
   const startHardQuiz = useCallback(() => {
@@ -130,6 +153,25 @@ export function QuizMode() {
   return (
     <div className="container">
       <div className="quiz-layout">
+        <div className="quiz-limit-bar">
+          <span className="quiz-limit-label">문제 수</span>
+          <div className="quiz-limit-chips">
+            {LIMIT_PRESETS.map((preset) => (
+              <button
+                type="button"
+                key={String(preset)}
+                className={cn(
+                  'quiz-limit-chip',
+                  quizLimit === preset && 'active',
+                )}
+                onClick={() => changeLimit(preset)}
+              >
+                {preset === 'all' ? '전체' : preset}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="stats">
           <div>
             진행: <span className="num">{idx + 1}</span> /{' '}
