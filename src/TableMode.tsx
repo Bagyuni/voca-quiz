@@ -3,7 +3,7 @@ import { useStore } from './useStore';
 import { cn } from './utils';
 
 export function TableMode() {
-  const { getFilteredWords, hardWords, toggleHard, currentDay } = useStore();
+  const { getFilteredWords, hardWords, toggleHard, selectedDays } = useStore();
   const [hardFilterOn, setHardFilterOn] = useState(false);
   const [showTop, setShowTop] = useState(false);
 
@@ -19,7 +19,7 @@ export function TableMode() {
     ? words.filter((w) => hardWords.has(w.id))
     : words;
 
-  const showDay = currentDay === 'all' || currentDay === 'range';
+  const showDay = selectedDays.size !== 1;
 
   return (
     <div className="container container-wide">
