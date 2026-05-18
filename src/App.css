@@ -842,6 +842,34 @@ body {
 .card-container {
   width: 100%;
   perspective: 1000px;
+  position: relative;
+}
+
+.quiz-star-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: rgb(255 255 255 / 18%);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.quiz-star-btn:hover {
+  color: rgb(255 255 255 / 50%);
+  background: rgb(255 255 255 / 5%);
+}
+
+.quiz-star-btn.is-hard {
+  color: var(--star);
 }
 
 .card {
