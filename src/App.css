@@ -720,6 +720,10 @@ body {
   transform: none;
 }
 
+.word-modal .study-card.is-hard {
+  background: var(--card);
+}
+
 /* --- Quiz Mode --- */
 .quiz-limit-bar {
   display: flex;
