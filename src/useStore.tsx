@@ -25,14 +25,14 @@ export interface StoreContextValue {
   currentDay: string;
   dayRange: DayRange | null;
   daysAvailable: string[];
-  currentMode: 'study' | 'quiz';
+  currentMode: 'study' | 'quiz' | 'table';
   hardWords: Set<WordId>;
   loading: boolean;
   error: string | null;
   syncing: boolean;
   syncStatus: 'idle' | 'done' | 'fail';
   syncDiff: number;
-  setMode: (mode: 'study' | 'quiz') => void;
+  setMode: (mode: 'study' | 'quiz' | 'table') => void;
   setDay: (day: string) => void;
   setDayRange: (range: DayRange) => void;
   toggleHard: (id: WordId) => void;
@@ -46,7 +46,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [allWords, setAllWords] = useState<Word[]>([]);
   const [currentDay, setCurrentDay] = useState('all');
   const [dayRange, setDayRangeState] = useState<DayRange | null>(null);
-  const [currentMode, setCurrentMode] = useState<'study' | 'quiz'>('study');
+  const [currentMode, setCurrentMode] = useState<'study' | 'quiz' | 'table'>(
+    'study',
+  );
   const [hardWords, setHardWords] = useState<Set<WordId>>(() => {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -127,7 +129,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const setMode = useCallback((mode: 'study' | 'quiz') => {
+  const setMode = useCallback((mode: 'study' | 'quiz' | 'table') => {
     setCurrentMode(mode);
   }, []);
 

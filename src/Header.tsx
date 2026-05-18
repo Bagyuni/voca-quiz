@@ -101,6 +101,13 @@ export function Header() {
       <div className="mode-switch">
         <button
           type="button"
+          className={cn('mode-btn', currentMode === 'table' && 'active')}
+          onClick={() => setMode('table')}
+        >
+          📋 표 모드
+        </button>
+        <button
+          type="button"
           className={cn('mode-btn', currentMode === 'study' && 'active')}
           onClick={() => setMode('study')}
         >
