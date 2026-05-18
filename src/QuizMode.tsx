@@ -192,7 +192,9 @@ export function QuizMode() {
         <QuizCard
           word={currentWord}
           revealed={revealed}
+          isHard={hardWords.has(currentWord.id)}
           onReveal={revealCard}
+          onToggleHard={() => toggleHard(currentWord.id)}
         />
 
         <div className={cn('buttons', revealed && 'visible')}>
