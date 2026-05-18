@@ -6,7 +6,7 @@ import { TableMode } from './TableMode';
 import { StoreProvider, useStore } from './useStore';
 
 function AppContent() {
-  const { loading, error, currentMode, currentDay, dayRange } = useStore();
+  const { loading, error, currentMode, selectedDays } = useStore();
 
   if (loading) {
     return (
@@ -42,9 +42,9 @@ function AppContent() {
       {currentMode === 'quiz' && (
         <QuizMode
           key={
-            currentDay === 'range' && dayRange
-              ? `quiz-range-${dayRange.start}-${dayRange.end}`
-              : `quiz-${currentDay}`
+            selectedDays.size === 0
+              ? 'quiz-all'
+              : `quiz-${[...selectedDays].sort().join(',')}`
           }
         />
       )}

@@ -18,15 +18,9 @@ const QUIZ_LIMIT_KEY = 'jp_vocab_quiz_limit_v1';
 
 export type QuizLimit = number | 'all';
 
-export interface DayRange {
-  start: string;
-  end: string;
-}
-
 export interface StoreContextValue {
   allWords: Word[];
-  currentDay: string;
-  dayRange: DayRange | null;
+  selectedDays: Set<string>;
   daysAvailable: string[];
   currentMode: 'study' | 'quiz' | 'table';
   hardWords: Set<WordId>;
@@ -38,8 +32,8 @@ export interface StoreContextValue {
   quizLimit: QuizLimit;
   setQuizLimit: (limit: QuizLimit) => void;
   setMode: (mode: 'study' | 'quiz' | 'table') => void;
-  setDay: (day: string) => void;
-  setDayRange: (range: DayRange) => void;
+  toggleDay: (day: string) => void;
+  clearDays: () => void;
   toggleHard: (id: WordId) => void;
   getFilteredWords: () => Word[];
   syncFromSheet: () => void;
@@ -49,8 +43,7 @@ const StoreContext = createContext<StoreContextValue | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [allWords, setAllWords] = useState<Word[]>([]);
-  const [currentDay, setCurrentDay] = useState('all');
-  const [dayRange, setDayRangeState] = useState<DayRange | null>(null);
+  const [selectedDays, setSelectedDaysState] = useState<Set<string>>(new Set());
   const [currentMode, setCurrentMode] = useState<'study' | 'quiz' | 'table'>(
     'study',
   );
@@ -103,23 +96,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!initialDaySet.current && daysAvailable.length > 0) {
       initialDaySet.current = true;
-      setCurrentDay(daysAvailable[daysAvailable.length - 1]);
+      setSelectedDaysState(new Set([daysAvailable[daysAvailable.length - 1]]));
     }
   }, [daysAvailable]);
 
   const getFilteredWords = useCallback(() => {
-    if (currentDay === 'all') return allWords;
-    if (currentDay === 'range' && dayRange) {
-      const startIdx = daysAvailable.indexOf(dayRange.start);
-      const endIdx = daysAvailable.indexOf(dayRange.end);
-      if (startIdx === -1 || endIdx === -1) return allWords;
-      const [lo, hi] =
-        startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
-      const included = new Set(daysAvailable.slice(lo, hi + 1));
-      return allWords.filter((w) => included.has(String(w.day)));
-    }
-    return allWords.filter((w) => String(w.day) === String(currentDay));
-  }, [allWords, currentDay, dayRange, daysAvailable]);
+    if (selectedDays.size === 0) return allWords;
+    return allWords.filter((w) => selectedDays.has(String(w.day)));
+  }, [allWords, selectedDays]);
 
   useEffect(() => {
     const cached = loadCache();
@@ -156,13 +140,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCurrentMode(mode);
   }, []);
 
-  const setDay = useCallback((day: string) => {
-    setCurrentDay(day);
+  const toggleDay = useCallback((day: string) => {
+    setSelectedDaysState((prev) => {
+      const next = new Set(prev);
+      if (next.has(day)) next.delete(day);
+      else next.add(day);
+      return next;
+    });
   }, []);
 
-  const setDayRange = useCallback((range: DayRange) => {
-    setDayRangeState(range);
-    setCurrentDay('range');
+  const clearDays = useCallback(() => {
+    setSelectedDaysState(new Set());
   }, []);
 
   const syncFromSheet = useCallback(() => {
@@ -188,8 +176,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value: StoreContextValue = {
     allWords,
-    currentDay,
-    dayRange,
+    selectedDays,
     daysAvailable,
     currentMode,
     hardWords,
@@ -201,8 +188,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     quizLimit,
     setQuizLimit,
     setMode,
-    setDay,
-    setDayRange,
+    toggleDay,
+    clearDays,
     toggleHard,
     getFilteredWords,
     syncFromSheet,
