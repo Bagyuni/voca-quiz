@@ -1306,3 +1306,7 @@ body {
 [data-theme="light"] .quiz-star-btn:hover {
   background: rgb(0 0 0 / 4%);
 }
+
+[data-theme="light"] .word-table tbody td {
+  border-top-color: rgb(0 0 0 / 8%);
+}
