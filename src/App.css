@@ -1333,6 +1333,18 @@ body {
   }
 }
 
+[data-theme="light"] .kanji-hint {
+  border-color: rgb(0 0 0 / 18%);
+}
+
+[data-theme="light"] .kh-hun {
+  color: #7ba87a;
+}
+
+[data-theme="light"] .kh-eum {
+  color: #2c6e3a;
+}
+
 [data-theme="light"] .word-table tbody td {
   border-top-color: rgb(0 0 0 / 8%);
 }
