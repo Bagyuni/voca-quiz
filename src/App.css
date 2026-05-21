@@ -348,10 +348,12 @@ body {
     border-color 0.2s;
 }
 
-.study-card:hover {
-  transform: translateY(-4px);
-  background: var(--card-hover);
-  border-color: rgb(255 255 255 / 20%);
+@media (hover: hover) {
+  .study-card:hover {
+    transform: translateY(-4px);
+    background: var(--card-hover);
+    border-color: rgb(255 255 255 / 20%);
+  }
 }
 
 .study-card.is-hard {
