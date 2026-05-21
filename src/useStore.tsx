@@ -15,8 +15,20 @@ const SHEET_ID = '1Moj1MM-s7BO_UBmvZNQIBXbxfWCUVWS0D77lX2rEPWg';
 const GID = '734089437';
 const STORAGE_KEY = 'jp_vocab_dynamic_hard_v4';
 const QUIZ_LIMIT_KEY = 'jp_vocab_quiz_limit_v1';
+const THEME_KEY = 'jp_vocab_theme_v1';
+const FONT_KEY = 'jp_vocab_font_v1';
 
 export type QuizLimit = number | 'all';
+export type Theme = 'dark' | 'light';
+export type Font = 'serif' | 'sans';
+
+// 초기 렌더 전에 적용해 플래시 방지
+try {
+  const t = localStorage.getItem(THEME_KEY);
+  const f = localStorage.getItem(FONT_KEY);
+  document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark';
+  document.documentElement.dataset.font = f === 'sans' ? 'sans' : 'serif';
+} catch {}
 
 export interface StoreContextValue {
   allWords: Word[];
@@ -31,6 +43,10 @@ export interface StoreContextValue {
   syncDiff: number;
   quizLimit: QuizLimit;
   setQuizLimit: (limit: QuizLimit) => void;
+  theme: Theme;
+  font: Font;
+  setTheme: (theme: Theme) => void;
+  setFont: (font: Font) => void;
   setMode: (mode: 'study' | 'quiz' | 'table') => void;
   toggleDay: (day: string) => void;
   clearDays: () => void;
@@ -78,6 +94,37 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setQuizLimitState(limit);
     try {
       localStorage.setItem(QUIZ_LIMIT_KEY, String(limit));
+    } catch {}
+  }, []);
+
+  const [theme, setThemeState] = useState<Theme>(() => {
+    try {
+      return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+  const [font, setFontState] = useState<Font>(() => {
+    try {
+      return localStorage.getItem(FONT_KEY) === 'sans' ? 'sans' : 'serif';
+    } catch {
+      return 'serif';
+    }
+  });
+
+  const setTheme = useCallback((next: Theme) => {
+    setThemeState(next);
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {}
+  }, []);
+
+  const setFont = useCallback((next: Font) => {
+    setFontState(next);
+    document.documentElement.dataset.font = next;
+    try {
+      localStorage.setItem(FONT_KEY, next);
     } catch {}
   }, []);
 
@@ -187,6 +234,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     syncDiff,
     quizLimit,
     setQuizLimit,
+    theme,
+    font,
+    setTheme,
+    setFont,
     setMode,
     toggleDay,
     clearDays,

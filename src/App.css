@@ -16,6 +16,37 @@
   --wrong: #e74c3c;
   --reveal: #f39c12;
   --star: #f1c40f;
+  --font-jp: "Noto Serif JP", serif;
+  --font-kr: "Noto Serif KR", serif;
+  --font-mix: "Noto Serif KR", "Noto Serif JP", serif;
+  --highlight: #4a90e2;
+  --highlight-soft: rgb(74 144 226 / 12%);
+  --highlight-soft-border: rgb(74 144 226 / 35%);
+  --highlight-shadow: rgb(74 144 226 / 40%);
+}
+
+[data-theme="light"] {
+  --bg: #f7f1e3;
+  --card: #fffbf0;
+  --card-hover: #f0e8d2;
+  --accent: #e94560;
+  --accent2: #e4d8b8;
+  --text: #2d2823;
+  --text-dim: #6b6151;
+  --correct: #27ae60;
+  --wrong: #c0392b;
+  --reveal: #b8730a;
+  --star: #c9a200;
+  --highlight: #6ea877;
+  --highlight-soft: rgb(110 168 119 / 15%);
+  --highlight-soft-border: rgb(110 168 119 / 45%);
+  --highlight-shadow: rgb(110 168 119 / 35%);
+}
+
+[data-font="sans"] {
+  --font-jp: "Noto Sans JP", sans-serif;
+  --font-kr: "Noto Sans KR", sans-serif;
+  --font-mix: "Noto Sans KR", "Noto Sans JP", sans-serif;
 }
 
 body {
@@ -53,10 +84,6 @@ body {
   color: var(--text);
   position: relative;
   margin-bottom: 20px;
-}
-
-.header h1 span {
-  color: var(--accent);
 }
 
 .sync-btn {
@@ -188,10 +215,10 @@ body {
 }
 
 .day-btn.active {
-  background: #4a90e2;
+  background: var(--highlight);
   color: #fff;
-  border-color: #4a90e2;
-  box-shadow: 0 2px 8px rgb(74 144 226 / 40%);
+  border-color: var(--highlight);
+  box-shadow: 0 2px 8px var(--highlight-shadow);
 }
 
 /* --- Selection Indicator --- */
@@ -215,9 +242,9 @@ body {
   align-items: center;
   gap: 8px;
   padding: 2px 10px;
-  background: rgb(74 144 226 / 12%);
-  border: 1px solid rgb(74 144 226 / 35%);
-  color: #4a90e2;
+  background: var(--highlight-soft);
+  border: 1px solid var(--highlight-soft-border);
+  color: var(--highlight);
   border-radius: 12px;
   font-size: 0.78rem;
   font-weight: 700;
@@ -355,9 +382,9 @@ body {
 .sc-kanji {
   font-size: 2.2rem;
   font-weight: 900;
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   margin-bottom: 8px;
-  color: #fff;
+  color: var(--text);
   margin-top: 10px;
   display: flex;
   justify-content: center;
@@ -508,7 +535,7 @@ body {
 }
 
 .sc-hira {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   font-size: 1.1rem;
   color: var(--reveal);
   font-weight: 700;
@@ -516,7 +543,7 @@ body {
 }
 
 .sc-mean {
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-kr);
   font-size: 1rem;
   color: var(--text-dim);
   margin-bottom: 12px;
@@ -524,19 +551,19 @@ body {
 }
 
 .sc-ex {
-  font-family: "Noto Serif KR", "Noto Serif JP", serif;
+  font-family: var(--font-mix);
   background: rgb(0 0 0 / 20%);
   padding: 8px;
   border-radius: 8px;
   font-size: 0.8rem;
-  color: #aaa;
+  color: var(--text-dim);
   width: 100%;
   line-height: 1.4;
 }
 
 /* stylelint-disable-next-line no-descending-specificity -- unrelated to .header h1 span */
 .sc-ex span {
-  color: #ddd;
+  color: var(--text);
   display: block;
   margin-bottom: 2px;
 }
@@ -621,15 +648,15 @@ body {
 }
 
 .word-table td.wt-kanji {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   font-size: 1.2rem;
   white-space: nowrap;
 }
 
 .word-table td.wt-hira {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   color: var(--reveal);
   font-weight: 600;
   font-size: 1.05rem;
@@ -637,7 +664,7 @@ body {
 }
 
 .word-table td.wt-mean {
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-kr);
   color: var(--text-dim);
 }
 
@@ -744,9 +771,9 @@ body {
 }
 
 .quiz-limit-chip.active {
-  background: #4a90e2;
+  background: var(--highlight);
   color: #fff;
-  box-shadow: 0 2px 6px rgb(74 144 226 / 30%);
+  box-shadow: 0 2px 6px var(--highlight-shadow);
 }
 
 .quiz-layout {
@@ -867,12 +894,12 @@ body {
 
 .kanji {
   width: 100%;
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   font-size: 3.5rem;
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 20px;
-  color: #fff;
+  color: var(--text);
   word-break: keep-all;
 }
 
@@ -892,7 +919,7 @@ body {
 }
 
 .hiragana {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--reveal);
@@ -900,14 +927,14 @@ body {
 }
 
 .meaning {
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-kr);
   font-size: 1.2rem;
   color: var(--text-dim);
   font-weight: 600;
 }
 
 .example {
-  font-family: "Noto Serif KR", "Noto Serif JP", serif;
+  font-family: var(--font-mix);
   margin: 16px auto 0;
   padding: 12px 16px;
   background: rgb(255 255 255 / 4%);
@@ -920,7 +947,7 @@ body {
 
 .example .jp {
   color: var(--text);
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   display: block;
   margin-bottom: 4px;
 }
@@ -1049,21 +1076,21 @@ body {
 }
 
 .wrong-item .wi-kanji {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   font-weight: 700;
   flex: 0 0 27%;
   text-align: center;
 }
 
 .wrong-item .wi-reading {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp);
   color: var(--reveal);
   flex: 0 0 27%;
   text-align: center;
 }
 
 .wrong-item .wi-meaning {
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--font-kr);
   color: var(--text-dim);
   flex: 0 0 36%;
   text-align: center;
@@ -1119,4 +1146,139 @@ body {
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
+}
+
+/* --- Settings --- */
+.settings-wrap {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+}
+
+.settings-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid rgb(255 255 255 / 10%);
+  color: var(--text-dim);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.settings-btn:hover,
+.settings-btn.open {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+.settings-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--card);
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+  min-width: 200px;
+  animation: fade-in 0.15s ease;
+}
+
+.settings-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.settings-segment {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.seg-btn {
+  flex: 1;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.seg-btn:hover {
+  color: var(--text);
+}
+
+.seg-btn.active {
+  background: var(--accent2);
+  color: var(--text);
+}
+
+[data-theme="light"] .seg-btn.active {
+  color: #fff;
+  background: var(--text);
+}
+
+/* --- Light mode tweaks --- */
+[data-theme="light"] .sync-btn,
+[data-theme="light"] .settings-btn,
+[data-theme="light"] .mode-switch,
+[data-theme="light"] .day-btn,
+[data-theme="light"] .study-card,
+[data-theme="light"] .card,
+[data-theme="light"] .word-table-wrap,
+[data-theme="light"] .range-popover,
+[data-theme="light"] .range-popover::before,
+[data-theme="light"] .settings-popover,
+[data-theme="light"] .settings-segment,
+[data-theme="light"] .scroll-top-btn,
+[data-theme="light"] .ctrl-btn,
+[data-theme="light"] .lock-input,
+[data-theme="light"] .range-field select,
+[data-theme="light"] .word-modal {
+  border-color: rgb(0 0 0 / 10%);
+}
+
+[data-theme="light"] .mode-btn.active {
+  color: var(--text);
+  background: var(--accent2);
+}
+
+[data-theme="light"] .sc-ex,
+[data-theme="light"] .example {
+  background: rgb(0 0 0 / 5%);
+}
+
+[data-theme="light"] .ctrl-btn:hover {
+  background: var(--card-hover);
+}
+
+[data-theme="light"] .keyboard-hint kbd {
+  background: rgb(0 0 0 / 8%);
 }
