@@ -1150,7 +1150,7 @@ body {
 
 /* --- Settings --- */
 .settings-wrap {
-  position: fixed;
+  position: absolute;
   top: 16px;
   left: 16px;
   z-index: 50;
@@ -1281,4 +1281,28 @@ body {
 
 [data-theme="light"] .keyboard-hint kbd {
   background: rgb(0 0 0 / 8%);
+}
+
+[data-theme="light"] .star-btn,
+[data-theme="light"] .wi-star-btn {
+  color: rgb(0 0 0 / 20%);
+}
+
+[data-theme="light"] .star-btn:hover,
+[data-theme="light"] .wi-star-btn:hover {
+  color: rgb(0 0 0 / 50%);
+}
+
+[data-theme="light"] .wt-star-btn,
+[data-theme="light"] .quiz-star-btn {
+  color: rgb(0 0 0 / 25%);
+}
+
+[data-theme="light"] .wt-star-btn:hover,
+[data-theme="light"] .quiz-star-btn:hover {
+  color: rgb(0 0 0 / 55%);
+}
+
+[data-theme="light"] .quiz-star-btn:hover {
+  background: rgb(0 0 0 / 4%);
 }
