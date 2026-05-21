@@ -373,8 +373,10 @@ body {
   transition: color 0.2s;
 }
 
-.star-btn:hover {
-  color: rgb(255 255 255 / 40%);
+@media (hover: hover) {
+  .star-btn:hover {
+    color: rgb(255 255 255 / 40%);
+  }
 }
 
 .study-card.is-hard .star-btn {
@@ -611,16 +613,18 @@ body {
   cursor: pointer;
 }
 
-.wt-row:hover td {
-  background: var(--card-hover);
-}
-
 .wt-row.is-hard td {
   background: rgb(241 196 15 / 6%);
 }
 
-.wt-row.is-hard:hover td {
-  background: rgb(241 196 15 / 12%);
+@media (hover: hover) {
+  .wt-row:hover td {
+    background: var(--card-hover);
+  }
+
+  .wt-row.is-hard:hover td {
+    background: rgb(241 196 15 / 12%);
+  }
 }
 
 .word-table td.wt-star {
@@ -641,8 +645,10 @@ body {
   transition: color 0.15s;
 }
 
-.wt-star-btn:hover {
-  color: rgb(255 255 255 / 50%);
+@media (hover: hover) {
+  .wt-star-btn:hover {
+    color: rgb(255 255 255 / 50%);
+  }
 }
 
 .wt-row.is-hard .wt-star-btn {
@@ -767,9 +773,11 @@ body {
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.quiz-limit-chip:hover {
-  color: var(--text);
-  background: rgb(255 255 255 / 5%);
+@media (hover: hover) {
+  .quiz-limit-chip:hover {
+    color: var(--text);
+    background: rgb(255 255 255 / 5%);
+  }
 }
 
 .quiz-limit-chip.active {
@@ -848,9 +856,11 @@ body {
     background 0.15s;
 }
 
-.quiz-star-btn:hover {
-  color: rgb(255 255 255 / 50%);
-  background: rgb(255 255 255 / 5%);
+@media (hover: hover) {
+  .quiz-star-btn:hover {
+    color: rgb(255 255 255 / 50%);
+    background: rgb(255 255 255 / 5%);
+  }
 }
 
 .quiz-star-btn.is-hard {
@@ -875,8 +885,10 @@ body {
   position: relative;
 }
 
-.card:hover {
-  background: var(--card-hover);
+@media (hover: hover) {
+  .card:hover {
+    background: var(--card-hover);
+  }
 }
 
 .card-hint {
@@ -991,18 +1003,20 @@ body {
   border: 1px solid rgb(231 76 60 / 30%);
 }
 
-.btn-wrong:hover {
-  background: rgb(231 76 60 / 25%);
-}
-
 .btn-correct {
   background: rgb(46 204 113 / 15%);
   color: var(--correct);
   border: 1px solid rgb(46 204 113 / 30%);
 }
 
-.btn-correct:hover {
-  background: rgb(46 204 113 / 25%);
+@media (hover: hover) {
+  .btn-wrong:hover {
+    background: rgb(231 76 60 / 25%);
+  }
+
+  .btn-correct:hover {
+    background: rgb(46 204 113 / 25%);
+  }
 }
 
 /* --- Result Screen --- */
@@ -1073,8 +1087,10 @@ body {
   transition: color 0.2s;
 }
 
-.wi-star-btn:hover {
-  color: rgb(255 255 255 / 40%);
+@media (hover: hover) {
+  .wi-star-btn:hover {
+    color: rgb(255 255 255 / 40%);
+  }
 }
 
 .wrong-item .wi-kanji {
@@ -1119,9 +1135,11 @@ body {
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.ctrl-btn:hover {
-  background: #1a3a6a;
-  color: var(--text);
+@media (hover: hover) {
+  .ctrl-btn:hover {
+    background: #1a3a6a;
+    color: var(--text);
+  }
 }
 
 .star-quiz-btn {
@@ -1130,9 +1148,11 @@ body {
   background: rgb(241 196 15 / 10%);
 }
 
-.star-quiz-btn:hover {
-  background: rgb(241 196 15 / 20%);
-  color: #fff;
+@media (hover: hover) {
+  .star-quiz-btn:hover {
+    background: rgb(241 196 15 / 20%);
+    color: #fff;
+  }
 }
 
 .keyboard-hint {
@@ -1277,8 +1297,10 @@ body {
   background: rgb(0 0 0 / 5%);
 }
 
-[data-theme="light"] .ctrl-btn:hover {
-  background: var(--card-hover);
+@media (hover: hover) {
+  [data-theme="light"] .ctrl-btn:hover {
+    background: var(--card-hover);
+  }
 }
 
 [data-theme="light"] .keyboard-hint kbd {
@@ -1290,23 +1312,25 @@ body {
   color: rgb(0 0 0 / 20%);
 }
 
-[data-theme="light"] .star-btn:hover,
-[data-theme="light"] .wi-star-btn:hover {
-  color: rgb(0 0 0 / 50%);
-}
-
 [data-theme="light"] .wt-star-btn,
 [data-theme="light"] .quiz-star-btn {
   color: rgb(0 0 0 / 25%);
 }
 
-[data-theme="light"] .wt-star-btn:hover,
-[data-theme="light"] .quiz-star-btn:hover {
-  color: rgb(0 0 0 / 55%);
-}
+@media (hover: hover) {
+  [data-theme="light"] .star-btn:hover,
+  [data-theme="light"] .wi-star-btn:hover {
+    color: rgb(0 0 0 / 50%);
+  }
 
-[data-theme="light"] .quiz-star-btn:hover {
-  background: rgb(0 0 0 / 4%);
+  [data-theme="light"] .wt-star-btn:hover,
+  [data-theme="light"] .quiz-star-btn:hover {
+    color: rgb(0 0 0 / 55%);
+  }
+
+  [data-theme="light"] .quiz-star-btn:hover {
+    background: rgb(0 0 0 / 4%);
+  }
 }
 
 [data-theme="light"] .word-table tbody td {
