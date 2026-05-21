@@ -5,7 +5,7 @@ import { useStore } from './useStore';
 import { cn } from './utils';
 
 export function TableMode() {
-  const { getFilteredWords, hardWords, toggleHard, selectedDays } = useStore();
+  const { getFilteredWords, hardWords, toggleHard } = useStore();
   const [hardFilterOn, setHardFilterOn] = useState(false);
   const [showTop, setShowTop] = useState(false);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -32,8 +32,6 @@ export function TableMode() {
     ? words.filter((w) => hardWords.has(w.id))
     : words;
 
-  const showDay = selectedDays.size !== 1;
-
   return (
     <div className="container container-wide">
       <div className="table-toolbar">
@@ -49,15 +47,6 @@ export function TableMode() {
       </div>
       <div className="word-table-wrap">
         <table className="word-table">
-          <thead>
-            <tr>
-              <th className="wt-star" aria-label="어려움" />
-              {showDay && <th className="wt-day">Day</th>}
-              <th className="wt-kanji">한자</th>
-              <th className="wt-hira">히라가나</th>
-              <th className="wt-mean">뜻</th>
-            </tr>
-          </thead>
           <tbody>
             {displayWords.map((w, i) => {
               const isHard = hardWords.has(w.id);
@@ -80,7 +69,6 @@ export function TableMode() {
                       {isHard ? '★' : '☆'}
                     </button>
                   </td>
-                  {showDay && <td className="wt-day">{w.day}</td>}
                   <td className="wt-kanji">{w.kanji}</td>
                   <td className="wt-hira">{w.hira}</td>
                   <td className="wt-mean">{w.mean}</td>

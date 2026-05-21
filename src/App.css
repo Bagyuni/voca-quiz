@@ -571,19 +571,6 @@ body {
   font-family: "Noto Sans KR", "Noto Sans JP", sans-serif;
 }
 
-.word-table thead th {
-  position: sticky;
-  top: 0;
-  background: var(--accent2);
-  color: var(--text);
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-align: left;
-  padding: 11px 12px;
-  letter-spacing: 0.04em;
-  z-index: 1;
-}
-
 .word-table tbody td {
   padding: 10px 12px;
   border-top: 1px solid rgb(255 255 255 / 5%);
@@ -607,7 +594,6 @@ body {
   background: rgb(241 196 15 / 12%);
 }
 
-.word-table th.wt-star,
 .word-table td.wt-star {
   width: 40px;
   text-align: center;
@@ -634,14 +620,6 @@ body {
   color: var(--star);
 }
 
-.word-table th.wt-day,
-.word-table td.wt-day {
-  width: 60px;
-  color: var(--text-dim);
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
 .word-table td.wt-kanji {
   font-family: "Noto Serif JP", serif;
   font-weight: 700;
@@ -664,13 +642,11 @@ body {
 }
 
 @media (width <= 640px) {
-  .word-table thead th,
   .word-table tbody td {
     padding: 9px 6px;
     font-size: 0.95rem;
   }
 
-  .word-table th.wt-star,
   .word-table td.wt-star {
     width: 30px;
     padding-left: 4px;
@@ -691,11 +667,6 @@ body {
     white-space: normal;
   }
 
-  .word-table th.wt-day,
-  .word-table td.wt-day {
-    width: 40px;
-    font-size: 0.85rem;
-  }
 }
 
 /* --- Word Modal (table row tap) --- */
